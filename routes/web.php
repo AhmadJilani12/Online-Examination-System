@@ -28,7 +28,7 @@ Route::get('/login',function(){
 });
 Route::get('/',[AuthController::class ,'loadLogin']);
 
-Route::post('/login',[AuthController::class ,'userLogin'])->name('userLogin');
+Route::post('/login',[AuthController::class ,'userLogin'])->name('userLogin')->middleware('web');
 
 
 
@@ -47,6 +47,13 @@ Route::group(['middleware'=>['web','checkStudent']],function(){
 });
 
 Route::get('/logout',[AuthController::class,'logout']);
+
+Route::get('/forget-password',[AuthController::class,'forgetPasswordLoad']);
+
+
+Route::post('/forget-password',[AuthController::class,'forgetPassword'])->name('forgetPassword');
+Route::get('/reset-password',[AuthController::class,'resetPasswordLoad']);
+Route::post('/reset-password',[AuthController::class,'resetPassword'])->name('resetPassword');
 
 
 
