@@ -41,6 +41,8 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
     //subject route
 
     Route::post('/add-subject',[AdminController::class,'AddSubject'])->name('AddSubject');
+     Route::post('/edit-subject',[AdminController::class,'editSubject'])->name('editSubject');
+     Route::post('/delete-subject',[AdminController::class,'deleteSubject'])->name('deleteSubject');
 
 
 
