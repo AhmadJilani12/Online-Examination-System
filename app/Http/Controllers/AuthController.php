@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Models\PasswordReset;
@@ -126,7 +127,9 @@ return view('forget-password');
 
 public function   adminDashboard(){
 
-    return view('admin.dashboard');
+
+ $subjects=   Subject::all();
+    return view('admin.dashboard',compact('subjects'));
 }
 
 
