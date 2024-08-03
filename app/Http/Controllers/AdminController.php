@@ -200,7 +200,11 @@ public function deleteExam(Request $request)
 
 public function qnaDashboard(){
 
-return view('admin.qnaDashboard');
+    $question = Question::with('answer')->get();
+    $questionJson = json_encode($question);
+    
+    return view('admin.qnaDashboard', compact('question', 'questionJson'));
+
 
 }
 

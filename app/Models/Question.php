@@ -12,4 +12,11 @@ class Question extends Model
     protected $fillable =[
         'question',
         ];
+
+        public function answer()
+        {
+return $this->hasMany(Answer::class,'question_id','id');
+
+
+        }
 }
