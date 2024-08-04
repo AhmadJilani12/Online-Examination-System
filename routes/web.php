@@ -61,6 +61,8 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
      
 
      Route::post('/admin-updateQNA',[AdminController::class,'updateQNA'])->name('updateQNA');
+     Route::post('/admin-deleteQNA',[AdminController::class,'deleteQNA'])->name('deleteQNA');
+     Route::post('/admin-importQNA',[AdminController::class,'importQNA'])->name('importQNA');
 
      
 

@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Answer;
 use Carbon\Carbon;
-
+use App\Imports\QnaImport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpParser\Node\Stmt\TryCatch;
 
 class AdminController extends Controller
 {
@@ -377,14 +379,64 @@ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
 
 
 
+public function deleteQNA(Request $request)
+{
+
+    try
+
+{
+
+    Question::where('id', $request->deleteQna_id)->delete();
+    Answer::where('question_id',$request->deleteQna_id)->delete();
+
+    return response()->json(['success'=>true, 'msg'=>'Question and Answers deleted successfully']);
 
 
+} catch (\Exception $e) {
+  
 
-
+    
+return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+}
 
 
 
 }
+
+
+
+public function importQNA(Request $request)
+{
+
+    try
+
+    {
+
+        if (!in_array($request->file('file')->getClientOriginalExtension(), ['xlsx', 'xls','csv'])) {
+            return response()->json(['success' => false, 'msg' => 'Invalid file format. Please upload an Excel file.']);
+        }
+
+
+    
+
+    Excel::import(new QnaImport,$request->file('file'));
+
+    return response()->json(['success' =>true, 'msg' => 'QNA imported successfully']);
+    
+    } catch (\Exception $e) {
+      
+    
+        
+    return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+    }
+    
+
+}
+}
+
+
+
+
 
 
 
