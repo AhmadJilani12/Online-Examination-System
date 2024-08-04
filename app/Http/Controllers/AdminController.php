@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subject;
+
+use App\Models\User;
 use App\Models\exam;
 use Illuminate\Http\Request;
 
@@ -432,6 +434,18 @@ public function importQNA(Request $request)
     
 
 }
+
+
+   //student Dashboard
+
+  public function studentDashboard(Request $request)
+  { 
+
+
+    $student =User::where('is_admin',0)->get();
+
+    return view('admin.studentdashboard',compact('student'));
+  }
 }
 
 
