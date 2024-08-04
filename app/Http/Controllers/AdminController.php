@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Question;
 use App\Models\Answer;
+use Carbon\Carbon;
+
 
 class AdminController extends Controller
 {
@@ -252,6 +254,137 @@ public function addQna(Request $request){
     
     }
     
+
+
+
+
+  public function  getQnaDetails (Request $request)
+  {
+   $qna= Question:: Where('id',$request->qid)->with('answer')->get();
+
+    return response()->json(['data' => $qna]);
+
+
+
+  }
+
+public function deleteAns(Request $request)
+{
+
+
+    try {
+        
+Answer::where('id',$request->id)->delete();
+
+return response()->json(['success'=>true, 'msg'=>'Answer deleted successfully']);
+
+    } catch (\Exception $e) {
+      
+
+        
+return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+    }
+
+
+
 }
+
+public function updateQNA(Request $request)
+{
+
+
+    try {
+        
+        Question::where('id',$request->question_id)->update([
+
+            'question'=>$request->Question,
+
+        ]);
+
+     
+  //old answerhandling
+  if(isset($request->answers))
+  {
+
+    foreach ($request->answers as $id =>  $answer) {
+   
+      
+$is_correct=0;
+
+if($request->is_correct == $answer){
+
+
+$is_correct=1;
+}
+$updated_at = Carbon::now()->toDateTimeString();
+
+   
+$ans = Answer::where('id', $id)->firstOrFail();
+$ans->answer = $answer;
+$ans->is_correct = $is_correct;
+$ans->updated_at = now(); // Or any desired datetime
+$ans->save();
+
+    }
+
+  }
+
+  //new answer handling 
+
+  if(isset($request->new_answers))
+  {
+
+    foreach ($request->new_answers as   $answer) {
+   
+      
+$is_correct=0;
+
+if($request->is_correct == $answer){
+
+
+$is_correct=1;
+}
+
+
+     Answer::insert([
+      'question_id'=>$request->question_id,
+      'answer'=>$answer,
+      'is_correct'=>$is_correct
+
+     ]);
+    }
+
+  }
+
+
+
+
+
+    return response()->json(['success'=>true, 'msg'=>'Question and Answers updated successfully']);
+
+
+    } catch (\Exception $e) {
+      
+
+        
+return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+}
+
 
 

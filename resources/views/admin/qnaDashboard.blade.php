@@ -15,7 +15,7 @@
    Add Q&A
   </button>
   
-  
+
 
 
 
@@ -26,8 +26,9 @@
             <th>#</th>
     
             <th>Question</th>
-      
+            <th>Edit</th>
             <th>Answer</th>
+           
          
         </tr>
         
@@ -44,10 +45,19 @@
     
 <td>{{$question->question}}</td>
 
+
+
+<td> 
+    <a href="#" class="editButton btn btn-info" data-id="{{$question->id}}"  data-toggle="modal" data-target="#editQnaModal"  >Edit</a>
+    
+    </td>
+
+
+
 <td> 
 <a href="#" class="ansButton" data-id="{{$question->id}}"  data-toggle="modal" data-target="#showAnsModal"  >See Answer</a>
-
 </td>
+
 </tr>
 
 
@@ -131,7 +141,7 @@
        
 <form id="addQna">
     @csrf
-        <div class="modal-body mapp">
+        <div class="modal-body addModalAnswers">
 
             <div class="row">
                 <div class="col">
@@ -154,6 +164,57 @@
 
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+  <!--edit QNA Modal -->
+  <div class="modal fade mx-3" id="editQnaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Update Q & A</h5>
+          <button id="addEditAnswer" class="ml-5 btn btn-info"> Add Answer</button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+       
+<form id="editQna">
+    @csrf
+        <div class="modal-body editModalAnswers">
+
+            <div class="row">
+                <div class="col">
+                    <input type="hidden" name="question_id" id="question_id">
+          <input type="text" class="w-100" required name="Question" id="question" placeholder="Enter Question">
+
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <span class="editError" style="color:red"></span>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Update Q &A</button>
+        </div>
+
+
+    </form>
+      </div>
+ 
+
+    </div>
+  </div>
+
+
+
 
 
 <script>
@@ -243,7 +304,7 @@ else{
                         <button class="btn btn-danger RemoveButton">Remove </button>
                     </div>`
 
-                    $(".mapp").append(html);
+                    $(".addModalAnswers").append(html);
 }
 
 });
@@ -295,6 +356,208 @@ $(".ansButton").click(function() {
 });
 
 
+
+
+
+
+
+
+
+//edit or udpate answer code
+
+$("#addEditAnswer").click(function(){
+
+
+if($(".editanswers").length >=6){
+    $(".editError").text("you can add maximum six answers");
+setTimeout(() => {
+$(".editError").text("");
+}, 2000);
+}
+else{
+
+        var html= `  <div class="row editanswers mt-2">
+        <input type="radio"  name="is_correct" class="edit_is_correct" />
+                    <div class="col">
+            <input type="text" class="w-100" required name="new_answers[]" placeholder="Enter Answer" required>
+
+                    </div>
+                    <button class="btn btn-danger RemoveButton  "  >Remove </button>
+                </div>`
+
+                $(".editModalAnswers").append(html);
+}
+
+});
+$(document).on("click", ".RemoveButton",function(e) {
+
+$(this).parent().remove();
+
+});
+
+
+//show edit answer
+
+$(".editButton").click(function(e){
+
+var qid=$(this).attr("data-id");
+
+$.ajax({
+
+    url:"{{route('getQnaDetails')}}",
+    type:"GET",
+    data:{qid:qid},
+    success:function(data){
+
+        var qna = data.data[0];
+        
+        $("#question_id").val(qna.id);
+        $("#question").val(qna['question']);
+       
+$(".editanswers").remove();
+
+var html='';
+
+for(var i=0;i<qna.answer.length;i++){
+
+
+    var checked= '';
+
+    if(qna.answer[i]['is_correct'] == 1){
+checked ='checked';
+
+    }
+  
+    html+=`  <div class="row editanswers mt-2">
+        <input type="radio"  name="is_correct" class="edit_is_correct"   `+checked+` />
+                    <div class="col">
+            <input type="text" class="w-100" required name="answers[`+qna.answer[i]['id']+`]" value="`+qna['answer'][i]['answer']+`" placeholder="Enter Answer" required>
+
+                    </div>
+                    <button class="btn btn-danger RemoveButton removeAnswer" data-id = "`+qna.answer[i]['id']+` " >Remove </button>
+                </div>`;
+
+
+
+            }
+
+            $(".editModalAnswers").append(html);
+    }
+
+});
+
+
+});
+
+
+
+
+
+
+//udpate Question and answer
+
+$("#editQna").submit(function(e){
+
+e.preventDefault();
+
+if($(".editanswers").length <2){
+    $(".editError").text("please add minimum two answers");
+setTimeout(() => {
+$(".editError").text("");
+}, 2000);
+}
+else{
+var checkIsCorrect=false;
+
+for(let i=0; i<$(".edit_is_correct").length; i++){
+
+
+if($(".edit_is_correct:eq("+i+")").prop("checked") == true){
+
+    checkIsCorrect=true;
+    $(".edit_is_correct:eq("+i+")").val($(".edit_is_correct:eq("+i+")").next().find("input").val());
+}
+
+
+}
+
+if(checkIsCorrect){
+
+  var formData=$(this).serialize();
+
+
+    $.ajax({
+
+url:"{{route ('updateQNA')}}",
+type:"POST",
+data:formData,
+
+success:function(data){
+
+    if(data.success == true){
+        
+        location.reload();
+
+        
+    }
+    else{
+
+        alert(data.msg);
+        
+    }
+}
+
+});
+
+
+
+
+
+
+}else{
+
+
+    $(".editError").text("Please select anyone correct answer");
+setTimeout(() => {
+$(".editError").text("");
+}, 2000);
+
+
+}
+}
+
+
+
+});
+
+//remove Answer code 
+$(document).on('click',".removeAnswer",function(){
+
+var ansId=$(this).attr("data-id");
+
+$.ajax({
+
+url:"{{route ('deleteAns')}}",
+type:"GET",
+data:{id:ansId},
+
+success:function(data){
+
+    if(data.success == true){
+        console.log(data.msg);
+        
+    }
+    else{
+
+        alert(data.msg);
+        
+    }
+}
+
+});
+
+
+});
     });
 </script>
 
