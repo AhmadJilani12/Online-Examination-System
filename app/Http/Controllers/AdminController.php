@@ -627,6 +627,43 @@ public function importQNA(Request $request)
           }
   }
 
+
+public function examquestions(Request $request)
+{
+    try{
+
+
+
+       $data = QnaExam::where('exam_id',$request->exam_id)->with('questions')->get();
+    return response()->json(['success'=>true, 'data' =>$data]);
+}
+catch (\Exception $e) {
+
+return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+}
+
+
+}
+
+
+
+ public function deleteexamquestions(Request $request)
+ {
+
+    try{
+  
+        
+
+       QnaExam::where('id',$request->id)->delete();
+    
+        return response()->json(['success'=>true,'msg'=>'Question deleted successfully']);
+    }
+    catch (\Exception $e)
+    {
+        return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+    }
+ }
+
 }
 
 

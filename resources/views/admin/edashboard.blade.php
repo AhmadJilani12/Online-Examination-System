@@ -30,6 +30,8 @@
     <th>Time</th>
     <th>Attempt</th>
     <th>Add Questions</th>
+    <th>Show Questions</th>
+
     <th>Edit</th>
 <th>Delete</th>
 
@@ -52,6 +54,11 @@
     <td> 
 
       <a href="" class="addQuestion" data-id="{{$ex->id}}"  data-toggle="modal" data-target="#addQnaModal"  >Add Question</a>
+    </td>
+
+    <td> 
+
+      <a href="" class="seeQuestion" data-id="{{$ex->id}}"  data-toggle="modal" data-target="#seeQnaModal"  >See Question</a>
     </td>
     <td>
       <button class="btn btn-info editButton" data-id="{{$ex->id}}" data-toggle="modal" data-target="#editExamModal">Edit</button>
@@ -212,16 +219,16 @@
         </div>
         <form id="addQna"> 
           @csrf
-        <div class="modal-body">  
+        <div class="modal-body" >  
           
           <input type="hidden" name="exam_id" id="addExamId"/>
 
-         <input type="search" name="search" class="w-100" placeholder="Search here"/>
+         <input type="search" name="search" id="searching" onkeyup="searchTable()" class="w-100" placeholder="Search here"/>
 
          <br>
          <br>
 
-         <table class="table">
+         <table class="table" id="questionsTable">
 
           <thead>
             <th>Select</th>
@@ -250,6 +257,58 @@
 
         </form>
      
+      </div>
+ 
+
+    </div>
+  </div>
+
+
+
+
+
+
+  <!--See  Question Modal -->
+  <div class="modal fade" id="seeQnaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Questions</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body" >  
+          
+         <table class="table" >
+
+          <thead>
+            <th>#</th>
+            <th>Question</th>
+            <th>Delete</th>
+          </thead>
+
+          <tbody class="seeQuestionTable">
+
+          </tbody>
+         </table>
+
+       
+
+        
+
+
+
+        </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        </div>
+
       </div>
  
 
@@ -610,12 +669,110 @@ alert(data.msg);
 }});
 });
 
+$(".seeQuestion").click(function(){
+
+ var id= $(this).attr("data-id");
+
+ console.log(id);
+ $.ajax({
+ url:"{{route('examquestions')}}",
+ type:"GET",
+ data:{exam_id:id},
 
 
+ success:function(data){
+
+
+
+  console.log(data);
+  var html ='';
+    var questions=data.data;
+
+    if(questions.length >0)
+    {
+
+       for(let i=0;i<questions.length;i++)
+       {
+
+        
+
+        html+= `
+         <tr> <td> `+(i+1)+` </td>  
+        
+      <td> `+questions[i]['questions'][0]['question']+` </td>
+      
+        <td>  <button class="btn btn-danger deleteQuestion" data-id="`+questions[i]['id']+`"  >Delete  </button>   </td>
+      </tr> `
+       }
+
+
+    }
+    else{
+    html+= `
+       <tr> <td colspan="1">  Questions not Available !  </td>   </tr>
+    `
+    }
+
+
+
+$(".seeQuestionTable").html(html);
+
+
+
+ }
+
+ });
+
+
+});
+
+
+//Delte Question
+
+  $(document).on('click','.deleteQuestion',function(e){
+
+  var id =  $(this).attr('data-id');
+
+  var obj=$(this);
+
+  
+  console.log("yes i clicked");
+  
+
+  $.ajax({
+    url:"{{route('deleteexamquestions')}}",
+    type:"GET",
+    data:{id:id},
+
+
+
+    success:function(data){
+
+      
+      if(data.success  == true)
+    {
+
+      
+     obj.parent().parent().remove();
+    }
+    else{
+
+      alert(data.msg);
+    }
+
+    }
+
+
+  });
 
 
 
     });
+
+
+  });
+
+
 
 
 
@@ -623,7 +780,55 @@ alert(data.msg);
 
 
 
+<script>
+ function searchTable()
+ {
 
+
+
+  var input,filter,table,tr,td, i, txtValue;
+  
+  input = document.getElementById("searching");
+
+  filter=input.value.toUpperCase();
+
+
+  table = document.getElementById("questionsTable");
+
+  tr= table.getElementsByTagName("tr");
+
+  for(i=0;i<tr.length;i++)
+ {
+
+  td=tr[i].getElementsByTagName("td")[1];
+   
+  if(td)
+ {
+               txtValue = td.textContent || td.innerText ;
+
+
+               if(txtValue.toUpperCase().indexOf(filter) > -1)
+               {                              
+
+
+                tr[i].style.display ="";
+
+
+
+               }
+               else{
+
+                tr[i].style.display ="none";
+               }
+ }
+
+
+
+ }
+
+}
+
+</script>
 
 
 
