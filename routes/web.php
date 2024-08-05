@@ -65,15 +65,13 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
      Route::post('/admin-importQNA',[AdminController::class,'importQNA'])->name('importQNA');
        //Student Routing
      Route::get('/admin/student',[AdminController::class,'studentDashboard'])->name('studentDashboard');
-     
-     
      Route::post('/add-Student',[AdminController::class,'addStudent'])->name('addStudent');
-     
      Route::post('/edit-Student',[AdminController::class,'editStudent'])->name('editStudent');
-     
      Route::post('/delete-Student',[AdminController::class,'delteStudent'])->name('deleteStudent');
-     
-     
+
+     // qna exam routing
+     Route::get('/get-questions',[AdminController::class,'getQuestions'])->name('getQuestions');
+     Route::post('/add-questions',[AdminController::class,'addquestions'])->name('addquestions');
 
 
 });

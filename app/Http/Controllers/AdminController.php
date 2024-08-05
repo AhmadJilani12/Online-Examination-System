@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 
 use App\Models\User;
+use App\Models\QnaExam;
 use App\Models\exam;
 use Illuminate\Http\Request;
 
@@ -552,6 +553,78 @@ public function importQNA(Request $request)
      
  return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
  }
+  }
+
+  public function getQuestions(Request $request)
+  { 
+
+   try {
+    
+    $questions =Question::all();
+    
+    if(count($questions) >0)
+    {
+      $data =[];
+
+      $counter =0;
+
+      foreach($questions as $question)
+      {
+      $qnaExam =  QnaExam::where(['exam_id' => $request->exam_id, 'question_id' => $question->id])->get();
+
+        if(count($qnaExam) == 0)
+        {
+
+        $data[$counter]['id'] = $question->id;
+        $data[$counter]['question'] = $question->question;
+
+        $counter ++;
+
+
+        }
+
+
+
+      }
+
+
+      return response()->json(['success'=>true, 'msg'=>'questions data', 'data'=>$data]);
+    }
+    else{
+
+ return response()->json(['success'=>false, 'msg'=>'questions not found']);
+    }
+   } catch (\Exception $e) {
+    
+ return response()->json(['success'=>false, 'msg'=>'questions not found']);
+   }
+
+
+  }
+
+  public function addquestions(Request $request)
+  {
+    try{
+
+        if(isset($request->question_ids))
+        {
+            foreach ($request->question_ids as $qid) {
+                  
+
+                QnaExam::insert([
+     'exam_id' => $request->exam_id,
+     'question_id' =>$qid
+
+                ]);
+            }
+        }
+
+        return response()->json(['success'=>true, 'msg'=>'questions Added successfully !']);
+           }
+           catch (\Exception $e) {
+           
+        return response()->json(['success'=>false, 'msg'=>'questions not found']);
+          }
   }
 
 }
