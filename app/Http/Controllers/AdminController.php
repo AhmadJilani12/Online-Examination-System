@@ -14,6 +14,11 @@ use Carbon\Carbon;
 use App\Imports\QnaImport;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 
 class AdminController extends Controller
 {
@@ -446,6 +451,109 @@ public function importQNA(Request $request)
 
     return view('admin.studentdashboard',compact('student'));
   }
+
+  public function addStudent(Request $request)
+  { 
+
+
+    try
+
+    {
+   $password = Str::random(8);
+
+   User::insert([
+    'name' =>$request->name,
+    'email' =>$request->email,
+    'password' =>Hash::make($password)
+
+
+   ]);
+       $url =URL::to('/');
+       $data['url']=$url;
+       $data['name']=$request->name;
+       $data['email']=$request->email;
+       $data['password']=$password;
+       $data['title']="Student Registration on Online Examination System";
+
+       Mail::send('RegistrationMail',['data'=>$data],function($message) use ($data)  
+    {
+        $message->to($data['email'])->subject($data['title']);
+
+    }
+    
+    );
+
+    return response()->json(['success' =>true, 'msg' => 'Student Added Successfully!!']);
+    
+    } catch (\Exception $e) {
+      
+    
+        
+    return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+    }
+    
+  }
+
+
+ //update Student
+  public function editStudent(Request $request)
+  {
+    try{
+      $user = User::find($request->id);
+
+      $user->name = $request->name;
+      
+      $user->email = $request->email;
+
+      $user->save();
+
+
+ 
+       $url =URL::to('/');
+       $data['url']=$url;
+       $data['name']=$request->name;
+       $data['email']=$request->email;
+       
+       $data['title']="Updated Student Profile on Online Examination System ";
+
+       Mail::send('updateProfileMail',['data'=>$data],function($message) use ($data)  
+    {
+        $message->to($data['email'])->subject($data['title']);
+
+    }
+    
+    );
+
+    return response()->json(['success' =>true, 'msg' => 'Student updated Successfully!!']);
+    
+    } catch (\Exception $e) {
+      
+    
+        
+    return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+    }
+
+   
+  }
+       //delete student
+
+  public function delteStudent(Request $request)
+  {
+          
+    
+ try{
+     User::where('id',$request->id)->delete();
+
+ return response()->json(['success' =>true, 'msg' => 'Student deleted Successfully!!']);
+ 
+ } catch (\Exception $e) {
+   
+ 
+     
+ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
+ }
+  }
+
 }
 
 
