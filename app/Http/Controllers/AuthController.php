@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-
+use  App\Models\exam;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
@@ -104,7 +104,11 @@ return back()->with('error','Username and password is incorrect');
 
 public function loadDashboard(){
 
-    return view('Student.dashboard');
+
+  $exam =  exam::with('subjects')->orderBy('date')->get();
+
+    return view('Student.dashboard',['exam' => $exam]);
+
 }
 
 public function logout(Request $request){

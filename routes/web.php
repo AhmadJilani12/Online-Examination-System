@@ -85,6 +85,9 @@ Route::group(['middleware'=>['web','checkStudent']],function(){
 
 
     Route::get('/dashboard',[AuthController::class,'loadDashboard']);
+
+
+    
 });
 
 Route::get('/logout',[AuthController::class,'logout']);
