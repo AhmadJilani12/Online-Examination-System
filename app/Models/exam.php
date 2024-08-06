@@ -15,7 +15,8 @@ protected $fillable =[
     'time',
     'subject_id',
     'date',
-    'attempt'
+    'attempt',
+    'entrance_id'
     
 ];
 

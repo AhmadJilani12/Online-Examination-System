@@ -77,7 +77,7 @@
 
 
 <tr>
-    <td colspan="3">Questions And Answers not foud</td>
+    <td colspan="3">Questions And Answers not found</td>
 </tr>
 
 @endif

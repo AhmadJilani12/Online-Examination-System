@@ -103,9 +103,13 @@ $exam=exam::with('subjects')->get();
 public function addExam(Request $request)
 {
 
+
+
     
     try {
 
+
+        $uniq_id =uniqid('exid');
 
 $validatedData = $request->validate([
             'hours' => 'required|integer|min:0',
@@ -120,7 +124,8 @@ $validatedData = $request->validate([
             'time'=>$duration,
             'subject_id' =>$request->subject_id,
         'date'=>$request->date,
-        'attempt'=>$request->attempt
+        'attempt'=>$request->attempt,
+        'entrance_id'=>$uniq_id
         ));
 
 

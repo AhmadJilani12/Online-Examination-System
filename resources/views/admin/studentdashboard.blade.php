@@ -71,7 +71,7 @@
 
 
 <tr>
-    <td colspan="3">Student Not foud</td>
+    <td colspan="3">Student Not found</td>
 </tr>
 
 @endif

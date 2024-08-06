@@ -736,7 +736,6 @@ $(".seeQuestionTable").html(html);
   var obj=$(this);
 
   
-  console.log("yes i clicked");
   
 
   $.ajax({

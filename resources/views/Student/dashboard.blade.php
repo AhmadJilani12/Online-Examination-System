@@ -34,8 +34,9 @@
         <td>{{$ex->subjects->subject}}</td>
         <td>{{$ex->date}}</td>
         <td>{{$ex->time}}Hrs</td>
-        <td>{{$ex->attempt}}</td>
         <td>{{$ex->attempt}} Time</td>
+        <td>{{$ex->attempt}} Time</td>
+        <td> <a href="#" class="copy" data-code="{{$ex->entrance_id}}"> <i class="fa fa-copy"></i> </a> </td>
 
 
 
@@ -52,9 +53,36 @@
      </tr>
    @endif
   </tbody>
+</table>
 
 
+<script>
+
+  $(document).ready(function(){
+
+    $(".copy").click(function(){
+
+      $(this).parent().prepend('<span class="copied_text"> Copied </span>');
+
+      var code =$(this).attr('data-code');
+      var url = "{{URL::to('/')}}/exam/"+code;
 
 
- </table>
+      var $temp=$("<input>");
+      $("body").append($temp);
+
+      $temp.val(url).select();
+      document.execCommand("copy");
+      $temp.remove();
+
+      setTimeout(() => {
+        
+        $('.copied_text').remove();
+
+      }, 1000);
+
+    });
+
+  });
+</script>
 @endsection
