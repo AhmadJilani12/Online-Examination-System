@@ -20,12 +20,20 @@ protected $fillable =[
     
 ];
 
-public function subjects(){
+public function getQnaExam(){
 
+    return $this->hasMany(QnaExam::class,'exam_id');
+
+}
+
+
+
+
+
+public function subjects(){
 
     return $this->belongsTo(Subject::class,'subject_id');
 
-    
 }
 
 
