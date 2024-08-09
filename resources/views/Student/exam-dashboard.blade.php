@@ -4,7 +4,7 @@
 @section('space-work')
 
    @php
-    $time = explode($exam[0]['time']);
+    $time = explode(':',$exam[0]['time']);
    @endphp
 
 <div class="container"> 
@@ -15,7 +15,7 @@
 
 
 <h1 class="text-center">{{ $exam[0]['exam_name']}}</h1>
-   <h4 class="text-right">{{ $exam[0]['time']}}</h4>
+   <h4 class="text-right time">{{ $exam[0]['time']}}</h4>
     @php $count =1; @endphp
 
 @if ($success ==true)
@@ -63,8 +63,45 @@
   $(document).ready(function(){
 
     //timer setting logic 
+    var time =@json($time);
    
-   
+   console.log(time);
+
+   $(".time").text(time[0] + " : " + time[1] +' : 00 Left Time');
+
+    var seconds =10;
+    var hours=time[0];
+    var minutes=time[1];
+
+ setInterval(() => {
+  
+if(seconds <=0)
+{
+  minutes--;
+  seconds =60;
+
+}
+
+if(minutes <= 0)
+
+{
+
+  hours--;
+  minutes = 59;
+  seconds = 60;
+
+}
+let tempHours=hours.toString().length > 1 ? hours :"0"+hours;
+let tempMin =minutes.toString().length > 1 ? minutes :"0"+minutes;
+let tempSecond =seconds.toString().length > 1 ? seconds :"0"+seconds;
+
+
+$(".time").text(tempHours+ " : " + tempMin +' : '+tempSecond+' Left Time');
+
+
+  seconds--;
+ }, 1000);
+
     $(".select_ans").click(function(){
       console.log("yes i clicked");
       
