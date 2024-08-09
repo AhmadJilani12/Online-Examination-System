@@ -29,13 +29,15 @@
     @foreach ($exam as $ex)
 
     <tr>
+      <td style="display: none"> {{$ex->id}}</td>
         <td>{{$count ++}}</td>
         <td>{{$ex->exam_name}}</td>
         <td>{{$ex->subjects->subject}}</td>
         <td>{{$ex->date}}</td>
         <td>{{$ex->time}}Hrs</td>
         <td>{{$ex->attempt}} Time</td>
-        <td>{{$ex->attempt}} Time</td>
+  
+        <td>{{$ex->attempt_counter}} </td>
         <td> <a href="#" class="copy" data-code="{{$ex->entrance_id}}"> <i class="fa fa-copy"></i> </a> </td>
 
 

@@ -15,15 +15,16 @@
 
 
 <h1 class="text-center">{{ $exam[0]['exam_name']}}</h1>
-   <h4 class="text-right time">{{ $exam[0]['time']}}</h4>
+
     @php $count =1; @endphp
 
 @if ($success ==true)
-                      <form action="{{ route ('examSubmit')}}" method="POST" class="mb-5" onsubmit="return isValid()">
+                      <form action="{{ route ('examSubmit')}}" method="POST" class="mb-5" id="exam_form" >
                         @csrf
                         <input type="hidden" name="exam_id" value="{{ $exam[0]['id']}}">
                     @if (count($qna) >0)
                              
+                    <h4 class="text-right time">{{ $exam[0]['time']}}</h4>
                     @foreach ($qna as $data )
                     
                     <div>
@@ -69,26 +70,36 @@
 
    $(".time").text(time[0] + " : " + time[1] +' : 00 Left Time');
 
-    var seconds =10;
-    var hours=time[0];
-    var minutes=time[1];
+    var seconds =59;
+    var hours= parseInt(time[0]);
+    var minutes= parseInt(time[1]);
 
- setInterval(() => {
+ var timer = setInterval(() => {
   
+if(hours == 0 && minutes ==0 && seconds == 0){
+   clearInterval(timer);
+
+   $("#exam_form").submit();
+
+  }
+
+
+  
+
 if(seconds <=0)
 {
   minutes--;
-  seconds =60;
+  seconds =59;
 
 }
 
-if(minutes <= 0)
+if(minutes <= 0 && hours!=0)
 
 {
 
   hours--;
   minutes = 59;
-  seconds = 60;
+  seconds = 59;
 
 }
 let tempHours=hours.toString().length > 1 ? hours :"0"+hours;

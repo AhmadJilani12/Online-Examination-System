@@ -19,8 +19,13 @@ class ExamController extends Controller
     {
  $qnaExam =    Exam::where('entrance_id', $id)->with('getQnaExam')->get();
     if(count($qnaExam) > 0){
+        $attempt_count =  ExamAttempt::where(['exam_id' => $qnaExam[0]['id'], 'user_id'=> auth()->user()->id])->count();
+ if($attempt_count >= $qnaExam[0]['attempt'] )
+ {
+    return view('Student.exam-dashboard',['success'=>false,'msg'=>'Your Exam attemption has been completed', 'exam'=> $qnaExam]);    
+ }
 
-        if(date('Y-m-d') == $qnaExam[0]['date'] ){
+      else  if(date('Y-m-d') == $qnaExam[0]['date'] ){
 
             if(count($qnaExam[0]['getQnaExam'] )>0 )
             {
@@ -68,14 +73,19 @@ else{
 
     for($i =0; $i< $qcount ; $i++)
     {
-        ExamAnswer::insert([
-            'attempt_id'=>$attempt_id,
-            'question_id' =>$request->q[$i],
-            'answer_id'=> request()->input('ans_'.($i+1))
-          
-          
-          
-            ]);
+
+        if(!empty($request->input('ans_'.($i+1))))
+        {
+            ExamAnswer::insert([
+                'attempt_id'=>$attempt_id,
+                'question_id' =>$request->q[$i],
+                'answer_id'=> request()->input('ans_'.($i+1))
+              
+              
+              
+                ]);
+        }
+  
 
     }
 
