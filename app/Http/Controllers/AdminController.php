@@ -669,7 +669,34 @@ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
     }
  }
 
+  public function loadMarks()
+  {
+  $exam =  Exam::with('getQnaExam')->get();
+    return view('admin.marksDashboard',compact('exam'));
+
+  }
+  public function updateMarks(Request $request)
+  {
+    try{
+  
+    
+     Exam::where('id',$request->exam_id)->update([
+        'marks' => $request->marks
+     ]);
+     
+     return response()->json(['success'=>true,'msg'=>'Marks updated successfully']);
+
+
+     }
+     catch (\Exception $e)
+     {
+         return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+     }
+
+  }
+
 }
+
 
 
 

@@ -12,14 +12,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="{{asset('js/multiselect-dropdown.js')}}"></script>
 
-        <style>
-
-          .multiselect-dropdown{
-            width: 100% !important;
-            
-
-          }
-        </style>
   </head>
   <body>
 		
@@ -38,6 +30,10 @@
           </li>
           <li class="active">
             <a href="/admin/exam"><span class="fa fa-tasks mr-3"></span> Exams</a>
+          </li>
+
+          <li class="active">
+            <a href="/admin/marks"><span class="fa fa-check mr-3"></span> Marks</a>
           </li>
 
           <li class="active">
