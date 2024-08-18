@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 
 use App\Models\User;
+use App\Models\ExamAnswer;
+
+use App\Models\ExamAttempt;
 use App\Models\QnaExam;
 use App\Models\exam;
 use Illuminate\Http\Request;
@@ -694,6 +697,75 @@ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
      }
 
   }
+
+  public function reviewExam()
+  {
+      $attempts = ExamAttempt::with(['user','exam'])->orderBy('id')->get();
+      return view('admin.reviewExam',compact('attempts'));
+  }
+
+  
+  public function reviewQna(Request $request)
+  {
+
+    try {
+        
+  $attemptData =  ExamAnswer::where('attempt_id', $request->attempt_id)->with(['question','answer'])->get();
+
+    return response()->json(['success'=>true,'data'=>$attemptData]);
+    } 
+    catch (\Exception $e)
+    {
+        return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+    }
+
+
+  }
+
+ public function approvedQna(Request $request)
+ {
+
+    try {
+
+
+        $attempt_id = $request->attempt_id;
+
+       $examData = ExamAttempt::where('id',$attempt_id)->with('exam')->get();
+
+     $marks =  $examData[0]['exam']['marks'];
+
+   $attemptData =  ExamAnswer::where('attempt_id',$attempt_id)->with('answer')->get();
+
+   $totalMarks = 0;
+
+   if(count($attemptData) >0 )
+   {
+
+    foreach ($attemptData as  $attempt) {
+        if($attempt->answer->is_correct == 1 ) 
+        {
+            $totalMarks  +=$marks;
+
+        }
+    }
+
+   }
+
+   ExamAttempt::where('id',$attempt_id)->update([
+    'status' => 1,
+    'marks' =>$totalMarks
+
+   ]);
+
+
+        return response()->json(['success'=>true,'msg'=>'Approved','data'=>$totalMarks]); 
+    } 
+    catch (\Exception $e)
+    {
+        return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+    }
+
+ }
 
 }
 

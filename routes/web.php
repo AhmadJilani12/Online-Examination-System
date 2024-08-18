@@ -83,6 +83,13 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
    //exam Marks routes
    Route::get('/admin/marks',[AdminController::class,'loadMarks']);
    Route::post('/update-marks',[AdminController::class,'updateMarks'])->name('updateMarks');
+   //exam Review 
+   
+   Route::get('/admin/review-exam',[AdminController::class,'reviewExam'])->name('reviewExam');
+    Route::get('/get-reviewd-qna',[AdminController::class,'reviewQna'])->name('reviewQna');
+    Route::post('/approved-qna',[AdminController::class, 'approvedQna'])->name('approvedQna');
+    
+
 
 });
 
