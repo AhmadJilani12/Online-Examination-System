@@ -84,7 +84,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Approve </button>
+          <button type="submit" class="btn btn-primary approve-btn">Approve </button>
         </div>
 
 
@@ -169,6 +169,7 @@ $(document).ready(function(){
 
       event.preventDefault();
 
+    $('.approve-btn').html(' Please wait <i class="fa fa-spinner  fa-spin">  </i>  ')  
       var formData =  $(this).serialize();
 
       $.ajax({

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('entrance_id', 255);
             $table->integer('attempt')->default(0);
             $table->float('marks')->default(0);
+            $table->float('pass_marks')->default(0);
 
             
             

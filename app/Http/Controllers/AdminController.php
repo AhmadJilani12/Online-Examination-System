@@ -684,7 +684,9 @@ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
   
     
      Exam::where('id',$request->exam_id)->update([
-        'marks' => $request->marks
+        'marks' => $request->marks,
+        'pass_marks' => $request->passmarks
+
      ]);
      
      return response()->json(['success'=>true,'msg'=>'Marks updated successfully']);
@@ -730,7 +732,7 @@ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
 
         $attempt_id = $request->attempt_id;
 
-       $examData = ExamAttempt::where('id',$attempt_id)->with('exam')->get();
+       $examData = ExamAttempt::where('id',$attempt_id)->with(['exam','user'])->get();
 
      $marks =  $examData[0]['exam']['marks'];
 
@@ -756,6 +758,30 @@ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
     'marks' =>$totalMarks
 
    ]);
+
+
+   $url = URL::to('/');
+
+   $data['url'] = $url.'/results';
+   $data['name'] = $examData[0]['user']['name'];
+   $data['email'] = $examData[0]['user']['email'];
+   $data['exam_name'] = $examData[0]['exam']['exam_name'];
+   $data['title'] = $examData[0]['exam']['exam_name'].'Result' ;
+
+   Mail::send('result-mail', ['data'=>$data], function ($message) use ($data){
+
+    $message->to($data['email'])->subject($data['title']);
+
+
+
+
+   }  );
+
+
+
+
+
+
 
 
         return response()->json(['success'=>true,'msg'=>'Approved','data'=>$totalMarks]); 

@@ -17,7 +17,7 @@
         <th>Date</th>
         <th>Time</th>
         <th>Total Attempt</th>
-        <th>Available Attempt</th>
+        <th>You Attempt</th>
         <th>Copy Link</th>
    </thead>
 
