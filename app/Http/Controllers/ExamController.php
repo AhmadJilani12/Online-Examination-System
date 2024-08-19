@@ -95,4 +95,13 @@ else{
  
     }
 
+    public function ResultDashboard()
+    {
+
+      $attempt =  ExamAttempt::where('user_id', Auth()->user()->id)->with('exam')->orderBy('updated_at')->get();
+
+
+      return view('Student.result',compact('attempt'));
+      
+    }
 }
