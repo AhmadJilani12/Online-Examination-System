@@ -11,6 +11,7 @@ class Question extends Model
 
     protected $fillable =[
         'question',
+        'explanation'
         ];
 
         public function answer()

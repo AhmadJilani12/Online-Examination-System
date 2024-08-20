@@ -88,6 +88,8 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
    Route::get('/admin/review-exam',[AdminController::class,'reviewExam'])->name('reviewExam');
     Route::get('/get-reviewd-qna',[AdminController::class,'reviewQna'])->name('reviewQna');
     Route::post('/approved-qna',[AdminController::class, 'approvedQna'])->name('approvedQna');
+    
+    Route::get('/export-student',[AdminController::class, 'exportStudent'])->name('exportStudent');
 
     
 
@@ -104,6 +106,8 @@ Route::group(['middleware'=>['web','checkStudent']],function(){
 
         
     Route::get('/results',[ExamController::class,'ResultDashboard'])->name('ResultDashboard');
+    
+    Route::get('/reviewStudentQna',[ExamController::class,'reviewStudentQna'])->name('reviewStudentQna');
 
 
 

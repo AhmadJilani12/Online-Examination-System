@@ -684,7 +684,6 @@ $(".seeQuestion").click(function(){
 
 
 
-  console.log(data);
   var html ='';
     var questions=data.data;
 
@@ -694,15 +693,16 @@ $(".seeQuestion").click(function(){
        for(let i=0;i<questions.length;i++)
        {
 
-        
+        html += `
+<tr>
+  <td>${i + 1}</td>
+  <td>${questions[i]['questions'][0]['question'].length > 42 ? questions[i]['questions'][0]['question'].substring(0, 40)+'...' : questions[i]['questions'][0]['question']}</td>
+  <td><button class="btn btn-danger deleteQuestion" data-id="${questions[i]['id']}">Delete</button></td>   
 
-        html+= `
-         <tr> <td> `+(i+1)+` </td>  
-        
-      <td> `+questions[i]['questions'][0]['question']+` </td>
-      
-        <td>  <button class="btn btn-danger deleteQuestion" data-id="`+questions[i]['id']+`"  >Delete  </button>   </td>
-      </tr> `
+</tr>`;
+
+
+
        }
 
 

@@ -102,6 +102,27 @@ else{
 
 
       return view('Student.result',compact('attempt'));
-      
+
     }
+
+    public function reviewStudentQna(Request $request)
+    {
+
+        try {
+         
+         $attemptData =   ExamAnswer::where('attempt_id',$request->attempt_id)->with(['question','answer'])->get();
+
+
+
+
+         return response()->json(['success' => true, 'data' =>$attemptData , 'msg' =>'Q&A Data' ]);
+        } catch (\Exception $e) {
+        
+ return response()->json(['success' => false, 'msg' => $e->getMessage() ]);
+        }
+
+   
+
+    }
+
 }

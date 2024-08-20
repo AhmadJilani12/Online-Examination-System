@@ -159,6 +159,16 @@
                 </div>
             </div>
 
+
+            <div class="row mt-3">
+              <div class="col">
+                <textarea name="explanation" placeholder="Enter your explanation(Optional)"  class="w-100"></textarea>
+
+              </div>
+          </div>
+
+
+
         </div>
         <div class="modal-footer">
             <span class="error" style="color:red"></span>
@@ -206,6 +216,15 @@
 
                 </div>
             </div>
+
+
+            <div class="row mt-3">
+              <div class="col">
+
+                <textarea name="explanation" id="explanation"  class="w-100" placeholder="Enter your explanation(Optional)"></textarea>
+
+              </div>
+          </div>
 
         </div>
         <div class="modal-footer">
@@ -500,6 +519,7 @@ $.ajax({
         
         $("#question_id").val(qna.id);
         $("#question").val(qna['question']);
+        $("#explanation").val(qna['explanation']);
        
 $(".editanswers").remove();
 

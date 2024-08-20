@@ -11,6 +11,8 @@
     Add Student
    </button>
 
+   <a href="{{ route('exportStudent') }}" class="btn btn-warning">Export Students</a>
+
   <table class="table table-striped table-borderd mt-3">
 
     <thead>

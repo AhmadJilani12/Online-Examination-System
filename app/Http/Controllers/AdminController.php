@@ -16,6 +16,8 @@ use App\Models\Question;
 use App\Models\Answer;
 use Carbon\Carbon;
 use App\Imports\QnaImport;
+
+use App\Exports\ExportStudent;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\Hash;
@@ -90,10 +92,7 @@ class AdminController extends Controller
 public function examDashboard()
 {
 
-
-    
 $subject=Subject::with('exams')->get();
-
 
 $subjects=Subject::all();
 $exam=exam::with('subjects')->get();
@@ -233,11 +232,21 @@ public function addQna(Request $request){
 
 
     try {
+  
+        $explanation = null;
 
+
+        if( isset($request->explanation))
+        {
+            $explanation=$request->explanation;
+        }
+        
 
      $qid=   Question::insertGetId(
             [
-                'question'=> $request->Question
+                'question'=> $request->Question,
+                   'explanation'=> $explanation
+
             ]
         );
 
@@ -313,9 +322,20 @@ public function updateQNA(Request $request)
 
     try {
         
+
+        
+        $explanation = null;
+
+
+        if( isset($request->explanation))
+        {
+            $explanation=$request->explanation;
+        }
+        
         Question::where('id',$request->question_id)->update([
 
             'question'=>$request->Question,
+            'explanation'=>$explanation
 
         ]);
 
@@ -793,6 +813,15 @@ return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
 
  }
 
+
+
+
+    public function exportStudent(){
+
+        return Excel::download(new ExportStudent, 'student.xlsx');
+        
+
+    }
 }
 
 
