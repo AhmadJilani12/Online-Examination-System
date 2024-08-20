@@ -1,156 +1,102 @@
 @extends('layout.layout-common')
 
-
 @section('space-work')
+@php
+    $time = explode(':', $exam[0]['time']);
+@endphp
 
-   @php
-    $time = explode(':',$exam[0]['time']);
-   @endphp
+<div class="container mt-4">
 
-<div class="container"> 
+    <p class="text-muted">Welcome, {{ Auth::user()->name }}</p>
 
-   
-
-<p style="color: black">Welcome ,{{Auth::user()->name}}</p>
-
-
-<h1 class="text-center">{{ $exam[0]['exam_name']}}</h1>
+    <h1 class="text-center mb-4">{{ $exam[0]['exam_name'] }}</h1>
 
     @php $count =1; @endphp
 
-@if ($success ==true)
-                      <form action="{{ route ('examSubmit')}}" method="POST" class="mb-5" id="exam_form" >
-                        @csrf
-                        <input type="hidden" name="exam_id" value="{{ $exam[0]['id']}}">
-                    @if (count($qna) >0)
-                             
-                    <h4 class="text-right time">{{ $exam[0]['time']}}</h4>
-                    @foreach ($qna as $data )
-                    
-                    <div>
-                      <h5>Q.{{$count ++;}}   {{$data['questions'][0]['question']  }}</h5>
-                      <input type="hidden" name="q[]" value="{{$data['questions'][0]['id']  }}">
-                    <input type="hidden" name="ans_{{$count -1}}" id="ans_{{$count -1}}" >
-                      @php
-                      $count1 =1;
-                  @endphp
-                        
-                      @foreach ( $data['answers'] as $answer )
 
-                    <p> <span style="font-weight: bold"> {{$count1 ++}}).</span>  {{ $answer['answer']}}
-                      <input type="radio" name="radio_{{$count-1}}" data-id="{{$count-1}}" class="select_ans" value="{{ $answer['id']}}">
-                    </p>         
-               
-                      @endforeach
-                    
-                    </div>  
-                    @endforeach
-             <div class="text-center">
-               <input type="submit" class="btn btn-info"value="submit">
-             </div>
-                  </form>
-   @else 
-    
-<h3 style="color: red" class="text-center">Questions and Answers are not Available </h3>  
-  @endif
+    @if ($success)
+        <form action="{{ route('examSubmit') }}" method="POST" class="mb-5" id="exam_form">
+            @csrf
+            <input type="hidden" name="exam_id" value="{{ $exam[0]['id'] }}">
+            
+            @if (count($qna) > 0)
+                <h4 class="text-right mb-4 time">{{ $exam[0]['time'] }}</h4>
 
-@else
-<h3 style="color: red" class="text-center">{{$msg}}</h3>    
-@endif
+                @foreach ($qna as $data)
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Q. {{ $count++ }} {{ $data['questions'][0]['question'] }}</h5>
+                            <input type="hidden" name="q[]" value="{{ $data['questions'][0]['id'] }}">
+                            <input type="hidden" name="ans_{{ $count - 1 }}" id="ans_{{ $count - 1 }}">
+
+                            @php $count1 = 1; @endphp
+                            @foreach ($data['answers'] as $answer)
+                                <div class="form-check">
+                                    <input type="radio" name="radio_{{ $count - 1 }}" id="answer_{{ $count - 1 }}_{{ $count1 }}" data-id="{{ $count - 1 }}" class="form-check-input select_ans" value="{{ $answer['id'] }}">
+                                    <label for="answer_{{ $count - 1 }}_{{ $count1 }}" class="form-check-label">
+                                        <span class="font-weight-bold">{{ $count1++ }}. </span> {{ $answer['answer'] }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+
+                <div class="text-center">
+                    <input type="submit" class="btn btn-primary" value="Submit">
+                </div>
+            @else
+                <h3 class="text-danger text-center">Questions and Answers are not available</h3>
+            @endif
+
+    @else
+        <h3 class="text-danger text-center">{{ $msg }}</h3>
+    @endif
+    </form>
 </div>
 
-
 <script>
-  $(document).ready(function(){
+$(document).ready(function() {
+    // Timer logic
+    var time = @json($time);
+    var hours = parseInt(time[0]);
+    var minutes = parseInt(time[1]);
+    var seconds = 59;
 
-    //timer setting logic 
-    var time =@json($time);
-   
-   console.log(time);
+    function formatTime(num) {
+        return num.toString().padStart(2, '0');
+    }
 
-   $(".time").text(time[0] + " : " + time[1] +' : 00 Left Time');
+    function updateTimer() {
+        let tempHours = formatTime(hours);
+        let tempMin = formatTime(minutes);
+        let tempSecond = formatTime(seconds);
+        $(".time").text(`${tempHours} : ${tempMin} : ${tempSecond} Left Time`);
 
-    var seconds =59;
-    var hours= parseInt(time[0]);
-    var minutes= parseInt(time[1]);
+        if (hours === 0 && minutes === 0 && seconds === 0) {
+            clearInterval(timer);
+            $("#exam_form").submit();
+        }
 
- var timer = setInterval(() => {
-  
-if(hours == 0 && minutes ==0 && seconds == 0){
-   clearInterval(timer);
+        if (seconds <= 0) {
+            if (minutes === 0 && hours > 0) {
+                hours--;
+                minutes = 59;
+            } else if (minutes > 0) {
+                minutes--;
+            }
+            seconds = 59;
+        } else {
+            seconds--;
+        }
+    }
 
-   $("#exam_form").submit();
+    var timer = setInterval(updateTimer, 1000);
 
-  }
-
-
-  
-
-if(seconds <=0)
-{
-  minutes--;
-  seconds =59;
-
-}
-
-if(minutes <= 0 && hours!=0)
-
-{
-
-  hours--;
-  minutes = 59;
-  seconds = 59;
-
-}
-let tempHours=hours.toString().length > 1 ? hours :"0"+hours;
-let tempMin =minutes.toString().length > 1 ? minutes :"0"+minutes;
-let tempSecond =seconds.toString().length > 1 ? seconds :"0"+seconds;
-
-
-$(".time").text(tempHours+ " : " + tempMin +' : '+tempSecond+' Left Time');
-
-
-  seconds--;
- }, 1000);
-
-    $(".select_ans").click(function(){
-      console.log("yes i clicked");
-      
-  var no=$(this).attr("data-id");
-
-  $("#ans_"+no).val($(this).val());
-
+    $(".select_ans").click(function() {
+        var no = $(this).data("id");
+        $("#ans_" + no).val($(this).val());
     });
-
-  });
-
-
-  
-  function isValid() {
-
-var result=true;
-
-var qlength =parseInt("{{$count}}") -1;
-
-$(".errormsg").remove();
-for (let i=1; i<=qlength; i++) {
-
-  if($("#ans_"+i).val() == ""){
-
-    result =false;
-
-    $("#ans_"+i).parent().append('<span style="color:red"  class="errormsg">Please select any answer </span>');
-
-
-    setTimeout(() => {
-     
-    }, 5000);
-  }
-}
-
-return result;
-}
+});
 </script>
-
 @endsection
-
