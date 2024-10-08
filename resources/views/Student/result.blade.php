@@ -182,7 +182,7 @@ $('.Rview').click(function(){
 
                  if(data[i]['question']['explanation'] != null)
                  {  
-               html += ` <p> <a href="#" class="explanation" data-explanation = `+data[i]['question']['explanation']+`  data-toggle="modal" data-target="#ExplanationModal"  >  See Explanation  </a>   </p> `
+               html += ` <p>   <b>Explantion:  </b>   `+data[i]['question']['explanation'] +`   </p> `
 
                  }
                  html += `
@@ -217,7 +217,10 @@ $('.Rview').click(function(){
 
                 $(document).on('click','.explanation',function(){
 
-                    var explanation =$(this).attr('data-explanation');
+                    var explanation =$(this).attr('data-explain');
+
+                    console.log(explanation);
+                    
                     $("#explanation").text(explanation);
 
 

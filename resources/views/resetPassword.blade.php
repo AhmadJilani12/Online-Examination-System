@@ -20,6 +20,7 @@
 
         <form action="{{ route('resetPassword') }}" method="POST">
             @csrf
+
             <input type="hidden" name="id" value="{{ $user[0]['id'] }}">
 
             <div class="form-group mb-3">

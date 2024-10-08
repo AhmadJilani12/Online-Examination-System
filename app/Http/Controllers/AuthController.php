@@ -123,6 +123,7 @@ return redirect('/');
 
 public function forgetPasswordLoad(){
 
+
 return view('forget-password');
 
 }
@@ -198,6 +199,7 @@ $date=Carbon::now()->format('Y-m-d H:i:s');
   PasswordReset::updateOrCreate(['email'=>$request->email],[
 
     'email'=>$request->email,
+    'acc_email'=>$request->email,
     'token'=>$token,
     'created_at'=>$date
   ]);
@@ -226,13 +228,16 @@ return back()->with('error',$e->getMessage());
 
 public function resetPasswordLoad(Request $request){
 
-  $resetData=  PasswordReset::Where('token',$request->token)->get();
+    $resetData = PasswordReset::where('token', $request->token)->get();
 
 
-if(isset($request->token) && count($resetData)>0 )
+   $email = $resetData[0]['acc_email'];
+
+
+if(isset($request->token) && count($resetData) > 0 )
 {
 
- $user=  User::where('email',$resetData[0]['email'])->get();
+ $user=  User::where('email',$email)->get();
 
 
 return view('resetPassword',compact('user'));

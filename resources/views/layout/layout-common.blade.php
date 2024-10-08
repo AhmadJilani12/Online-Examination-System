@@ -30,6 +30,8 @@
         toastList.forEach(toast => toast.show());
     });
 </script>
+
+
 @endsection
 </body>
 
