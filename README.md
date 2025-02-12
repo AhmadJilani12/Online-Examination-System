@@ -1,5 +1,3 @@
-Here's a **README.md** file designed specifically for GitHub. It includes proper formatting, sections, and styling to make your project stand out.  
-
 ---
 
 # 🚀 Full-Stack Online Examination System  
