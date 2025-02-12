@@ -94,10 +94,6 @@ The app will be available at **http://127.0.0.1:8000**
 
 ---
 
-## 📸 Screenshots  
-_(Add screenshots of your project UI to make it visually appealing.)_  
-
----
 
 ## 📌 Future Enhancements  
 🚀 Implement **Role-Based Access Control (RBAC)**.  
