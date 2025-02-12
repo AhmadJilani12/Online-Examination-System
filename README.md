@@ -117,9 +117,7 @@ _(Add screenshots of your project UI to make it visually appealing.)_
 ---
 
 ## 📞 Contact  
-📧 **Email:** [your-email@example.com](mailto:your-email@example.com)  
-🔗 **LinkedIn:** [Your LinkedIn Profile](https://linkedin.com/in/your-profile)  
-🔗 **GitHub:** [Your GitHub Profile](https://github.com/your-username)  
+📧 **Email:** (mailto:ahmadali43a5@gmail.com)  
 
 ---
 
@@ -132,5 +130,3 @@ This project is licensed under the **MIT License**.
 `#Laravel #MySQL #WebDevelopment #OnlineExamination #EducationTech #FullStackDevelopment #SoftwareDevelopment #EdTech`  
 
 ---
-
-This **README.md** is now optimized for **GitHub**, making it visually structured and easy to read. Let me know if you need any modifications! 🚀😊
